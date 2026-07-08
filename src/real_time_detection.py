@@ -11,12 +11,12 @@ MODEL_PATH = "models/emotion_model.keras"
 CASCADE_PATH = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 OUTPUT_DIR = "output"
 CAM_WIDTH, CAM_HEIGHT = 640, 480
-DISPLAY_WIDTH, DISPLAY_HEIGHT = 960, 720  # keeps 4:3 aspect ratio, no stretch
-PANEL_WIDTH = 300  # width of the emotion-confidence side panel
+DISPLAY_WIDTH, DISPLAY_HEIGHT = 960, 720  
+PANEL_WIDTH = 300  
 FACE_INPUT_SIZE = (48, 48)
 MIN_FACE_SIZE = (60, 60)
-SMOOTHING_WINDOW = 8            # frames of emotion history per face-track
-CONFIDENCE_LEVELS = [0, 40, 60, 80]  # cycle with 'C'
+SMOOTHING_WINDOW = 8            
+CONFIDENCE_LEVELS = [0, 40, 60, 80]  
 
 EMOTION_LABELS = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
 
@@ -57,16 +57,15 @@ smoothed_fps = 0.0
 show_help = True
 show_fps = True
 mirror = True
-conf_level_idx = 1  # start at 40%
+conf_level_idx = 1 
 recording = False
 video_writer = None
-session_emotion_log = deque(maxlen=2000)  # for the overall session summary
+session_emotion_log = deque(maxlen=2000)  
 
-# Simple per-face emotion smoothing keyed by approximate face position bucket.
+
 face_histories = {}
 
-# Full probability vector for the most recently analyzed face (drives the
-# live confidence-bar panel). None when no face is currently detected.
+
 last_prediction_vector = None
 last_display_emotion = None
 
@@ -175,8 +174,7 @@ try:
             frame = cv2.flip(frame, 1)
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray_eq = cv2.equalizeHist(gray)  # improves detection in poor lighting
-
+        gray_eq = cv2.equalizeHist(gray) 
         faces = face_detector.detectMultiScale(
             gray_eq,
             scaleFactor=1.3,
@@ -186,8 +184,6 @@ try:
 
         min_confidence = CONFIDENCE_LEVELS[conf_level_idx]
 
-        # Reset per-frame; repopulated below only if at least one face is found,
-        # so the side panel correctly shows "No face detected" otherwise.
         last_prediction_vector = None
         last_display_emotion = None
 
@@ -203,7 +199,7 @@ try:
             raw_emotion = EMOTION_LABELS[raw_idx]
             confidence = float(np.max(prediction) * 100)
 
-            # Per-face temporal smoothing: majority vote over recent frames
+            
             key = bucket_key(x, y, w, h)
             history = face_histories.setdefault(key, deque(maxlen=SMOOTHING_WINDOW))
             history.append(raw_emotion)
@@ -215,8 +211,7 @@ try:
                 display_emotion = smoothed_emotion
                 session_emotion_log.append(smoothed_emotion)
 
-            # Feed the side panel from the first (largest, since Haar returns
-            # roughly size-ordered) face in this frame.
+          
             if last_prediction_vector is None:
                 last_prediction_vector = prediction
                 last_display_emotion = display_emotion
@@ -235,7 +230,6 @@ try:
                 1,
             )
 
-        # Clean up stale face-history buckets occasionally so memory doesn't grow.
         if len(face_histories) > 50:
             face_histories.clear()
 
