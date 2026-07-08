@@ -2,9 +2,6 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-# ==========================
-# Colors (BGR)
-# ==========================
 BG = (28, 28, 28)
 PANEL = (42, 42, 42)
 WHITE = (255, 255, 255)
@@ -14,10 +11,6 @@ RED = (0, 0, 255)
 GRAY = (80, 80, 80)
 CYAN = (255, 255, 0)
 
-
-# ==========================
-# Draw Rounded Rectangle
-# ==========================
 def rounded_rect(img, pt1, pt2, color, radius=15):
 
     x1, y1 = pt1
@@ -42,9 +35,6 @@ def rounded_rect(img, pt1, pt2, color, radius=15):
                radius, color, -1)
 
 
-# ==========================
-# Progress Bar
-# ==========================
 def progress_bar(img, x, y, w, h, value, label):
 
     value = max(0, min(100, value))
@@ -87,10 +77,6 @@ def progress_bar(img, x, y, w, h, value, label):
                 WHITE,
                 1)
 
-
-# ==========================
-# Dashboard
-# ==========================
 def draw_dashboard(frame,
                    probs,
                    labels,
