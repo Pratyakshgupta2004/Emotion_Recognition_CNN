@@ -297,7 +297,7 @@ try:
             conf_level_idx = (conf_level_idx + 1) % len(CONFIDENCE_LEVELS)
             print(f"Confidence threshold set to {CONFIDENCE_LEVELS[conf_level_idx]}%")
 
-        elif key in (ord("q"), 27):  # 'q' or ESC
+        elif key in (ord("q"), 27):  
             break
 
 finally:
